@@ -1,0 +1,47 @@
+<mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar
+      color="primary"
+      class="d-flex justify-content-between cursor-pointer bg-health-red"
+      [routerLink]="''"
+    >
+      Handy App
+    </mat-toolbar>
+
+    <mat-nav-list role="navigation">
+      <a mat-list-item (click)="redirect('report-service')">Reportar servicio</a>
+      <a mat-list-item (click)="redirect('working-hours')">Calcular horas</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="sidenav.toggle()"
+        *ngIf="isHandset$ | async"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span class="d-none d-lg-block">Inicio</span>
+      <section class="ml-auto d-flex data-basic justify-content-between">
+        <mat-divider [vertical]="true" class="mr-2 grey"></mat-divider>
+        <span class="mx-1 cursor-pointer">{{timeOfDay()}}</span>
+      </section>
+      <button
+        mat-icon-button
+      >
+        <mat-icon>emoji_emotions</mat-icon>
+      </button>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
