@@ -1,23 +1,25 @@
 <div class="container min-vh-100">
-  <div class="row mt-5 d-flex justify-content-center mx-auto align-items-center">
-    <div class="col-md-5">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Identificación técnico</mat-label>
-        <input type="text" matInput>
-      </mat-form-field>
+  <form [formGroup]="formSearchWorkingHours" (ngSubmit)="sendFormSearchWorkingHours(formSearchWorkingHours)">
+    <div class="row mt-5 d-flex justify-content-center mx-auto align-items-center">
+      <div class="col-md-5">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Identificación técnico</mat-label>
+          <input type="text" matInput formControlName="staffIdentification">
+        </mat-form-field>
+      </div>
+      <div class="col-md-5">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de semana</mat-label>
+          <input type="number" matInput formControlName="week">
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!formSearchWorkingHours.valid">
+          Buscar
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="col-md-5">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Número de semana</mat-label>
-        <input type="number" matInput>
-      </mat-form-field>
-    </div>
-    <div class="col-md-2">
-      <button mat-flat-button color="primary">
-        Buscar
-        <mat-icon>search</mat-icon>
-      </button>
-    </div>
-  </div>
+  </form>
 </div>
 <router-outlet></router-outlet>

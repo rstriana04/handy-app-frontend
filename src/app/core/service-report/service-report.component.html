@@ -1,69 +1,71 @@
 <div class="container min-vh-100 hidden-scroll-y">
-  <div class="row mt-5 d-flex justify-content-center align-items-center mx-auto">
-    <div class="col-md-6">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Reportar servicio</mat-card-title>
-          <mat-card-subtitle>{{getCurrentDate() | date: 'short'}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="container">
-            <div class="row">
-              <div class="col-md-6">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Identificación del técnico</mat-label>
-                  <input type="text" matInput placeholder="1112368969">
-                </mat-form-field>
+  <form [formGroup]="formServiceReport" (ngSubmit)="sendFormServiceReport(formServiceReport)">
+    <div class="row mt-5 d-flex justify-content-center align-items-center mx-auto">
+      <div class="col-md-6">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Reportar servicio</mat-card-title>
+            <mat-card-subtitle>{{getCurrentDate() | date: 'short'}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Identificación del técnico</mat-label>
+                    <input type="text" matInput placeholder="1112368969" formControlName="staffIdentification">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Identificación del servicio</mat-label>
+                    <input type="text" matInput placeholder="123456789" formControlName="serviceIdentification">
+                  </mat-form-field>
+                </div>
               </div>
-              <div class="col-md-6">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Identificación del servicio</mat-label>
-                  <input type="text" matInput placeholder="123456789">
-                </mat-form-field>
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Fecha Inicio</mat-label>
+                    <input matInput [ngxMatDatetimePicker]="pickerFrom"
+                             formControlName="dateFrom">
+                    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #pickerFrom [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+                                             [touchUi]="touchUi"
+                                             [color]="color" [enableMeridian]="enableMeridian">
+                    </ngx-mat-datetime-picker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Fecha Fin</mat-label>
+                    <input matInput [ngxMatDatetimePicker]="pickerUntil"
+                             formControlName="dateUntil">
+                    <mat-datepicker-toggle matSuffix [for]="pickerUntil"></mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #pickerUntil [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+                                             [touchUi]="touchUi"
+                                             [color]="color" [enableMeridian]="enableMeridian">
+                    </ngx-mat-datetime-picker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="!formServiceReport.valid">
+                    Guardar
+                    <mat-icon>save</mat-icon>
+                  </button>
+                </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Fecha Inicio</mat-label>
-                  <input matInput [ngxMatDatetimePicker]="pickerFrom"
-                         [min]="minDate" [max]="maxDate" [disabled]="disabled">
-                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-                  <ngx-mat-datetime-picker #pickerFrom [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-                                           [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
-                                           [touchUi]="touchUi"
-                                           [color]="color" [enableMeridian]="enableMeridian">
-                  </ngx-mat-datetime-picker>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Fecha Fin</mat-label>
-                  <input matInput [ngxMatDatetimePicker]="pickerUntil"
-                         [min]="minDate" [max]="maxDate" [disabled]="disabled">
-                  <mat-datepicker-toggle matSuffix [for]="pickerUntil"></mat-datepicker-toggle>
-                  <ngx-mat-datetime-picker #pickerUntil [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-                                           [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
-                                           [touchUi]="touchUi"
-                                           [color]="color" [enableMeridian]="enableMeridian">
-                  </ngx-mat-datetime-picker>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 d-flex justify-content-end">
-                <button mat-flat-button color="primary">
-                  Guardar
-                  <mat-icon>save</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
 <router-outlet></router-outlet>
