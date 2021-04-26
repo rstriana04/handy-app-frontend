@@ -5,6 +5,6 @@ export interface ServiceReport {
   serviceIdentification: string;
   staffIdentification: string;
   week: number;
-  hourFrom: string;
-  hourUntil: string;
+  day?: number;
+  totalHours?: number;
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
-import { addDays, differenceInDays, format, getDay, getMonth, getWeek } from 'date-fns';
+import { addDays, differenceInDays, format, getWeek, isEqual } from 'date-fns';
 import { ThemePalette } from '@angular/material/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ServiceReport } from './models/service-report';
@@ -28,7 +28,7 @@ export class ServiceReportComponent implements OnInit {
 
   constructor(
     private serviceReportService: ServiceReportService,
-    private matSnackBar: MatSnackBar
+    private matSnackBar: MatSnackBar,
   ) {
   }
 
@@ -53,28 +53,42 @@ export class ServiceReportComponent implements OnInit {
   public sendFormServiceReport(formServiceReport: FormGroup): void {
     if (formServiceReport && formServiceReport.valid) {
       const daysServiceReports: ServiceReport[] = [];
-      const serviceReport: ServiceReport = {...formServiceReport.value};
+      const serviceReport: ServiceReport = {
+        ...formServiceReport.value,
+      };
 
       const dateFrom = new Date(serviceReport.dateFrom);
       const dateUntil = new Date(serviceReport.dateUntil);
-
-
       const diffInDays = differenceInDays(dateUntil, dateFrom);
-      const hourFrom = format(dateFrom, 'HH:mm:ss');
-      const hourUntil = format(dateUntil, 'HH:mm:ss');
 
-      for (let i = 0; i <= diffInDays; i++) {
-        daysServiceReports.push({
-          dateFrom: format(addDays(dateFrom, i ), 'yyyy-MM-dd'),
-          dateUntil: format(addDays(dateFrom, i ), 'yyyy-MM-dd'),
-          serviceIdentification: serviceReport.serviceIdentification,
-          staffIdentification: serviceReport.staffIdentification,
-          week: getWeek(addDays(dateFrom, i )),
-          hourFrom,
-          hourUntil,
-        });
+
+      if (format(dateFrom, 'HH:mm:ss') >= format(dateUntil, 'HH:mm:ss')) {
+        for (let i = 0; i <= diffInDays; i++) {
+          const isEqualDate = isEqual(new Date(format(dateUntil, 'yyyy-MM-dd')), new Date(format(dateFrom, 'yyyy-MM-dd')));
+          const dateAndHourUntil = new Date(`${format(dateFrom, 'yyyy-MM-dd')} ${format(dateUntil, 'HH:mm:ss')}`);
+          daysServiceReports.push({
+            dateFrom: format(addDays(dateFrom, i), 'yyyy-MM-dd HH:mm:ss'),
+            dateUntil:
+              format(addDays(dateAndHourUntil, ((diffInDays > 0 || !isEqualDate) ? (i + 1) : i)), 'yyyy-MM-dd HH:mm:ss'),
+            serviceIdentification: serviceReport.serviceIdentification,
+            staffIdentification: serviceReport.staffIdentification,
+            week: getWeek(addDays(dateFrom, i)),
+          });
+        }
+      } else {
+        for (let i = 0; i <= diffInDays; i++) {
+          const dateAndHourUntil = new Date(`${format(dateFrom, 'yyyy-MM-dd')} ${format(dateUntil, 'HH:mm:ss')}`);
+          daysServiceReports.push({
+            dateFrom: format(addDays(dateFrom, i), 'yyyy-MM-dd HH:mm:ss'),
+            dateUntil: format(addDays(dateAndHourUntil, i), 'yyyy-MM-dd HH:mm:ss'),
+            serviceIdentification: serviceReport.serviceIdentification,
+            staffIdentification: serviceReport.staffIdentification,
+            week: getWeek(addDays(dateFrom, i)),
+          });
+        }
       }
       if (daysServiceReports && daysServiceReports.length) {
+        console.log(daysServiceReports);
         this.serviceReportService.createServiceReports(daysServiceReports).subscribe(() => {
           this.formServiceReport.reset();
           this.matSnackBar.open('¡Servicio reportado correctamente!', 'Cerrar', {duration: 4000});

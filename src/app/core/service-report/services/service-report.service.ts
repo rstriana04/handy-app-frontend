@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ServiceReport } from '../models/service-report';
 import { environment } from '../../../../environments/environment';
-import { pluck } from 'rxjs/operators';
+import { filter, map, pluck } from 'rxjs/operators';
+import { getDay } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class ServiceReportService {
       observe: 'response',
       responseType: 'json',
     }).pipe(
-      pluck('body'),
+      pluck('body')
     );
   }
 

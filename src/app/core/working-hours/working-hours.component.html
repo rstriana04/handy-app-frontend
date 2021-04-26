@@ -20,6 +20,24 @@
         </button>
       </div>
     </div>
+    <div class="row mt-5">
+      <div class="col-md-12 d-flex justify-content-center mx-auto align-items-center">
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="single$ | async"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
   </form>
 </div>
 <router-outlet></router-outlet>
