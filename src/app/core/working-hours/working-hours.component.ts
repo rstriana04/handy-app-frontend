@@ -129,7 +129,10 @@ export class WorkingHoursComponent implements OnInit {
   }
 
   isUsualHours(days: number[]): boolean {
-    return days.includes(1) || days.includes(2) || days.includes(3) || days.includes(4) || days.includes(5) || days.includes(6);
+    if (days && Array.isArray(days)) {
+      return days.includes(1) || days.includes(2) || days.includes(3) || days.includes(4) || days.includes(5) || days.includes(6);
+    }
+    return false;
   }
 
   sumTotalHoursByDays(days: ServiceReport[]): number {

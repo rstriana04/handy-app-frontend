@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    ServiceReportComponent
+    ServiceReportComponent,
   ],
   imports: [
     CommonModule,
@@ -20,4 +20,5 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
   ],
 })
-export class ServiceReportModule { }
+export class ServiceReportModule {
+}

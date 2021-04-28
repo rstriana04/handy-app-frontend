@@ -10,7 +10,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
-    WorkingHoursComponent
+    WorkingHoursComponent,
   ],
   imports: [
     CommonModule,
@@ -20,4 +20,5 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     NgxChartsModule,
   ],
 })
-export class WorkingHoursModule { }
+export class WorkingHoursModule {
+}
