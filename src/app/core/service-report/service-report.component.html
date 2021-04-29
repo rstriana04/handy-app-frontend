@@ -28,10 +28,11 @@
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Fecha Inicio</mat-label>
                     <input matInput [ngxMatDatetimePicker]="pickerFrom"
-                             formControlName="dateFrom">
+                           [min]="minDateFrom"
+                             formControlName="dateFrom" (dateChange)="changeDateFrom($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
                     <ngx-mat-datetime-picker #pickerFrom [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-                                             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+                                             [stepHour]="stepHour" [stepMinute]="stepMinute"
                                              [touchUi]="touchUi"
                                              [color]="color" [enableMeridian]="enableMeridian">
                     </ngx-mat-datetime-picker>
@@ -43,10 +44,10 @@
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Fecha Fin</mat-label>
                     <input matInput [ngxMatDatetimePicker]="pickerUntil"
-                             formControlName="dateUntil">
+                             formControlName="dateUntil" [min]="minDateUntil" (dateChange)="changeDateUntil($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerUntil"></mat-datepicker-toggle>
                     <ngx-mat-datetime-picker #pickerUntil [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-                                             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+                                             [stepHour]="stepHour" [stepMinute]="stepMinute"
                                              [touchUi]="touchUi"
                                              [color]="color" [enableMeridian]="enableMeridian">
                     </ngx-mat-datetime-picker>

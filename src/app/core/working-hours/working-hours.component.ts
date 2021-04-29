@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ServiceReportService } from '../service-report/services/service-report.service';
-import { differenceInMinutes, format, getDay } from 'date-fns';
+import { addDays, differenceInMinutes, format, getDay } from 'date-fns';
 import { map } from 'rxjs/operators';
 import { ServiceReport } from '../service-report/models/service-report';
 import { Observable, of } from 'rxjs';
@@ -77,7 +77,7 @@ export class WorkingHoursComponent implements OnInit {
               const days = record.days;
               const hourFrom = format(new Date(record.dateFrom), 'HH:mm:ss');
               const hourUntil = format(new Date(record.dateUntil), 'HH:mm:ss');
-              return this.isUsualHours(days) && ((hourFrom >= '07:00:00' && hourFrom <= '20:00:00') && hourUntil <= '20:00:00');
+              return this.isUsualHours(days) && (hourFrom >= '07:00:00 am' && hourUntil <= '20:00:00');
             });
 
             const usualHours = {
@@ -87,9 +87,12 @@ export class WorkingHoursComponent implements OnInit {
 
             const nightHoursDays = records.filter(record => {
               const days = record.days;
-              const hourFrom = format(new Date(record.dateFrom), 'HH:mm:ss');
-              const hourUntil = format(new Date(record.dateUntil), 'HH:mm:ss');
-              return this.isUsualHours(days) && (hourFrom >= '20:00:00' && hourUntil <= '07:00:00');
+              const dateUntil = new Date(record.dateUntil);
+              const dateUntilRecord = format(dateUntil, 'yyyy-MM-dd h:mm:ss aaa');
+              const dateUntilValidate = format(
+                addDays(new Date(`${format(dateUntil, 'yyyy-MM-dd')} 07:00:00`), 1), 'yyyy-MM-dd h:mm:ss aaa');
+              const hourFrom = format(new Date(record.dateFrom), 'hh:mm:ss aaa');
+              return this.isUsualHours(days) && (hourFrom >= '08:00:00 pm') && (dateUntilRecord <= dateUntilValidate);
             });
 
             const nightHours = {
@@ -109,17 +112,17 @@ export class WorkingHoursComponent implements OnInit {
             const totalHoursInWeek = usualHours.value + nightHours.value + sundayHours.value;
             const usualHoursExtra = {
               name: `Horas Normales Extra`,
-              value: totalHoursInWeek >= 48 ? (usualHours.value >= 48 ? usualHours.value - 48 : 48 - usualHours.value) : 0,
+              value: totalHoursInWeek > 48 ? (usualHours.value >= 48 ? usualHours.value - 48 : 48 - usualHours.value) : 0,
             };
 
             const nightHoursExtra = {
               name: `Horas Nocturnas Extra`,
-              value: totalHoursInWeek >= 48 ? (nightHours.value >= 48 ? nightHours.value - 48 : 48 - nightHours.value) : 0,
+              value: totalHoursInWeek > 48 ? nightHours.value : 0,
             };
 
             const sundayHoursExtra = {
               name: `Horas Dominicales Extra`,
-              value: totalHoursInWeek >= 48 ? (sundayHours.value >= 48 ? sundayHours.value - 48 : 48 - sundayHours.value) : 0,
+              value: (totalHoursInWeek > 48 && sundayHours.value > 0) ? sundayHours.value : 0,
             };
             return [usualHours, nightHours, sundayHours, usualHoursExtra, nightHoursExtra, sundayHoursExtra];
           }

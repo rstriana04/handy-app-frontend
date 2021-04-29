@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ServiceReport } from './models/service-report';
 import { ServiceReportService } from './services/service-report.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDatetimePickerInputEvent } from '@angular-material-components/datetime-picker';
 
 @Component({
   selector: 'handy-app-service-report',
@@ -16,8 +17,8 @@ export class ServiceReportComponent implements OnInit {
   @ViewChild('picker') picker: any;
   public disabled = false;
   public showSpinners = true;
-  public showSeconds = true;
-  public touchUi = true;
+  public showSeconds = false;
+  public touchUi = false;
   public enableMeridian = true;
   public stepHour = 1;
   public stepMinute = 1;
@@ -25,6 +26,8 @@ export class ServiceReportComponent implements OnInit {
   public color: ThemePalette = 'primary';
 
   formServiceReport: FormGroup;
+  public minDateFrom = new Date();
+  public minDateUntil = null;
 
   constructor(
     private serviceReportService: ServiceReportService,
@@ -44,7 +47,7 @@ export class ServiceReportComponent implements OnInit {
   private initFormServiceReport(): void {
     this.formServiceReport = new FormGroup({
       dateFrom: new FormControl('', Validators.required),
-      dateUntil: new FormControl('', Validators.required),
+      dateUntil: new FormControl({value: '', disabled: true}, Validators.required),
       serviceIdentification: new FormControl('', Validators.required),
       staffIdentification: new FormControl('', Validators.required),
     });
@@ -88,7 +91,6 @@ export class ServiceReportComponent implements OnInit {
         }
       }
       if (daysServiceReports && daysServiceReports.length) {
-        console.log(daysServiceReports);
         this.serviceReportService.createServiceReports(daysServiceReports).subscribe(() => {
           this.formServiceReport.reset();
           this.matSnackBar.open('¡Servicio reportado correctamente!', 'Cerrar', {duration: 4000});
@@ -97,6 +99,23 @@ export class ServiceReportComponent implements OnInit {
           this.matSnackBar.open('¡Ocurrió un error inesperado!', 'Cerrar', {duration: 4000});
         });
       }
+    } else {
+      this.matSnackBar.open('¡Formulario invalido!', 'Cerrar', {duration: 4000});
+    }
+  }
+
+  public changeDateFrom($event: MatDatetimePickerInputEvent<any>): void {
+    this.minDateUntil = $event.value;
+    this.formServiceReport.get('dateUntil').enable({emitEvent: true, onlySelf: true});
+    this.formServiceReport.get('dateUntil').updateValueAndValidity({emitEvent: true, onlySelf: true});
+  }
+
+  public changeDateUntil($event: MatDatetimePickerInputEvent<any>): void {
+    const dateFrom = format(this.formServiceReport.get('dateFrom').value, 'yyyy-MM-dd HH:mm');
+    const dateUntil = format($event.value, 'yyyy-MM-dd HH:mm');
+    if (dateUntil <= dateFrom) {
+      this.formServiceReport.get('dateUntil').setValue('');
+      this.formServiceReport.get('dateUntil').updateValueAndValidity();
     }
   }
 }
